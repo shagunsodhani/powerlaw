@@ -1,17 +1,17 @@
 from math import e, log, pow
 from random import random
-# from regression import estimate_scaling_parameter, estimate_parameters
 import matplotlib.pyplot as plt
 
 def random_series(n = 1):
     """
+
     Generator to generate a stream of random numbers.
 
-    Parameters
-    ----------
-    n : Integer, number of elements to be generated.
-        Default value is 1
-        If n < 0, then unbounded number of elements are generated.
+    **Parameters**
+        n : Integer, number of elements to be generated.
+            Default value is 1
+            If n < 0, then unbounded number of elements are generated.
+
     """
     if(n>-1):
         for i in range(n):
@@ -22,17 +22,21 @@ def random_series(n = 1):
 
 def exponential_series(Lambda = 1.0, n = 1, xmin = 1.0):
     """
+
     Generator to generate a stream of numbers taken from exponential distribution.
 
-    Parameters
-    ----------
-    Lambda : Float/Integer, Lambda constant for the distribution.
-        Default value is 1.0
-    n : Integer, number of elements to be generated.
-        Default value is 1
-        If n < 0, then unbounded number of elements are generated.
-    xmin : Float/Integer, xmin for the distribution.
-        Default value is 1.0
+    **Parameters**
+    
+        Lambda : Float/Integer, Lambda constant for the distribution.
+            Default value is 1.0
+
+        n : Integer, number of elements to be generated.
+            Default value is 1
+            If n < 0, then unbounded number of elements are generated.
+
+        xmin : Float/Integer, xmin for the distribution.
+            Default value is 1.0
+
     """
     
     def mapping(x):
@@ -43,19 +47,24 @@ def exponential_series(Lambda = 1.0, n = 1, xmin = 1.0):
 
 def stretched_exponential_series(Lambda = 1.0, Beta = 1.0, n = 1, xmin = 1.0):
     """
+
     Generator to generate a stream of numbers taken from stretched exponential distribution.
 
-    Parameters
-    ----------
-    Lambda : Float/Integer, Lambda constant for the distribution.
-        Default value is 1.0
-    Beta : Float/Integer, Beta constant for the distribution.
-        Default value is 1.0
-    n : Integer, number of elements to be generated.
-        Default value is 1
-        If n < 0, then unbounded number of elements are generated.
-    xmin : Float/Integer, xmin for the distribution.
-        Default value is 1.0
+    **Parameters**
+
+        Lambda : Float/Integer, Lambda constant for the distribution.
+            Default value is 1.0
+
+        Beta : Float/Integer, Beta constant for the distribution.
+            Default value is 1.0
+
+        n : Integer, number of elements to be generated.
+            Default value is 1
+            If n < 0, then unbounded number of elements are generated.
+
+        xmin : Float/Integer, xmin for the distribution.
+            Default value is 1.0
+
     """
     
     def mapping(x):
@@ -66,18 +75,22 @@ def stretched_exponential_series(Lambda = 1.0, Beta = 1.0, n = 1, xmin = 1.0):
 
 def powerlaw_series(Alpha = 2.0, n = 1, xmin = 1.0):
     """
+    
     Generator to generate a stream of numbers taken from powerlaw distribution.
 
-    Parameters
-    ----------
-    Alpha : Float/Integer, Alpha constant for the distribution.
-        Default value is 2.0
-        Alpha value should be greater than 1.0
-    n : Integer, number of elements to be generated.
-        Default value is 1
-        If n < 0, then unbounded number of elements are generated.
-    xmin : Float/Integer, xmin for the distribution.
-        Default value is 1.0
+    **Parameters**
+
+        Alpha : Float/Integer, Alpha constant for the distribution.
+            Default value is 2.0
+            Alpha value should be greater than 1.0
+
+        n : Integer, number of elements to be generated.
+            Default value is 1
+            If n < 0, then unbounded number of elements are generated.
+
+        xmin : Float/Integer, xmin for the distribution.
+            Default value is 1.0
+
     """
     
     def mapping(x):
@@ -89,22 +102,24 @@ def powerlaw_series(Alpha = 2.0, n = 1, xmin = 1.0):
 
 def frequency_distribution(series, pdf = True, ccdf = True):
     """
+
     Generator to generates pdf(probability distribution function) or cdf(cummulative distribution function) or ccdf(complementary cummulative distribution function) of any series.
 
-    Parameters
-    ----------
-    series : list of values.
+    **Parameters**
 
-    pdf : Boolean. If True, return pdf else cdf
-        Default value is True
+        series : list of values.
 
-    ccdf : Boolean. This is considered only if pdf is set to False. If ccdf = True, return ccdf else cdf
-        Default value is True
+        pdf : Boolean. If True, return pdf else cdf
+            Default value is True
 
-    Returns
-    -------
-    (key, value) pairs are returned where key is one of the entries from the input series and value is the corresponding pdf for the key. 
+        ccdf : Boolean. This is considered only if pdf is set to False. If ccdf = True, return ccdf else cdf
+            Default value is True
+
+    **Returns**
+        
+        (key, value) pairs are returned where key is one of the entries from the input series and value is the corresponding pdf for the key. 
         The pairs are sorted by key.
+
     """
 
     sorted_series = sorted(series)
@@ -146,17 +161,17 @@ def frequency_distribution(series, pdf = True, ccdf = True):
                 value_to_deduct+=1
         yield (key_to_return, count)
 
-def plot_f_series(series):
+def plot_pdf_series(series):
     """
+
     Plots pdf(probability distribution function) for any series.
 
-    Parameters
-    ----------
-    series : list of values.
+    **Parameters**
+        series : list of values.
 
-    Returns
-    -------
-    Log log plot of the values.
+    **Returns**
+        Log log plot of the values.
+
     """
     # sorted_series = sorted(series)
     x = []

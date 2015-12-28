@@ -7,12 +7,13 @@ import sys
 
 def least_square_regression(x, y, xlabel = "x", ylabel = "y", prefix="", suffix=""):
     """
+
     Perform least square regression to find the best fit line and returns the slope of the line.
 
-    Parameters
-    ----------
-    x : List of values along x axis.
-    y : List of values along y axis.   
+    **Parameters**
+        x : List of values along x axis.
+        y : List of values along y axis.   
+
     """
 
     X = np.asarray(x).reshape((len(x), 1))
@@ -44,19 +45,21 @@ def least_square_regression(x, y, xlabel = "x", ylabel = "y", prefix="", suffix=
 def estimate_scaling_parameter(series, xmin = 1, discrete = False):
     
     """
+
     Perform Method of Maximum Liklihood (MLE) to find the best fit value of Alpha.
 
-    Parameters
-    ----------
-    series : series of data to be fit.
-    xmin : Float/Integer, xmin for the distribution - assumed to be known before-hand.
-        Default value is 1.0
-    discrete : Boolean, whether to treat series as discrete or continous.
-        Default value is False
+    **Parameters**
+    
+        series : series of data to be fit.
+        xmin : Float/Integer, xmin for the distribution - assumed to be known before-hand.
+            Default value is 1.0
+        discrete : Boolean, whether to treat series as discrete or continous.
+            Default value is False
 
-    Returns
-    -------
-    Estimated Alpha value.
+    **Returns**
+
+        Estimated Alpha value.
+
     """
     
     normalizing_constant = 0.0
@@ -75,15 +78,17 @@ def estimate_scaling_parameter(series, xmin = 1, discrete = False):
 
 def estimate_parameters(series):
     """
+    
     Apply Clauset et al.'s method to find the best fit value of xmin and Alpha.
 
-    Parameters
-    ----------
-    series : series of data to be fit.
+    **Parameters**
 
-    Returns
-    -------
-    (Estimated xmin, Estimated Alpha value).
+        series : series of data to be fit.
+
+    **Returns**
+
+        Tuple of (Estimated xmin, Estimated Alpha value).
+
     """
 
     sorted_series = sorted(series)
