@@ -51,10 +51,8 @@ def estimate_scaling_parameter(series, xmin = 1, discrete = False):
     **Parameters**
     
         series : series of data to be fit.
-        xmin : Float/Integer, xmin for the distribution - assumed to be known before-hand.
-            Default value is 1.0
-        discrete : Boolean, whether to treat series as discrete or continous.
-            Default value is False
+        xmin : Float/Integer, xmin for the distribution - assumed to be known before-hand. Default value is 1.0
+        discrete : Boolean, whether to treat series as discrete or continous. Default value is False
 
     **Returns**
 
