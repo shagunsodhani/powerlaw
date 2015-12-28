@@ -1,5 +1,7 @@
 # powerlaw
 
+[![Documentation Status](https://readthedocs.org/projects/powerlaw/badge/?version=latest)](http://powerlaw.readthedocs.org/en/latest/?badge=latest)
+
 Power-Law Distribution Analysis based on [Power-law distributions in Empirical data](http://arxiv.org/pdf/0706.1062.pdf) paper
 
 ### Introduction
