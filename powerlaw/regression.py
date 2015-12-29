@@ -74,7 +74,7 @@ def estimate_scaling_parameter(series, xmin = 1, discrete = False):
 
 # def ks_statistics(series):
 
-def estimate_parameters(series):
+def estimate_parameters(series, min_size_series = 50):
     """
     
     Apply Clauset et al.'s method to find the best fit value of xmin and Alpha.
@@ -82,6 +82,7 @@ def estimate_parameters(series):
     **Parameters**
 
         series : series of data to be fit.
+        min_size_series : Minimum possible size of the distribution to which power-law fit will be attempted. Fitting power-law to a very small series would give biased results where power-law may appear to be a good fit even when data is not drawn from power-law distribution. The default value is taken to be 50 as suggested in the paper.
 
     **Returns**
 
@@ -101,7 +102,7 @@ def estimate_parameters(series):
     ks_statistics_min = sys.maxint;
     xmin_result = 0
     Alpha_result = 2
-    for xmin in xmin_candidates[:-1]:
+    for xmin in xmin_candidates[:-1*min_size_series]:
         data =  filter(lambda x: x>=xmin, sorted_series)
         estimated_Alpha = estimate_scaling_parameter(data, xmin)
         n = len(data)
