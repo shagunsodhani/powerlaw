@@ -1,9 +1,10 @@
 import numpy as np
 from sklearn import linear_model
 import matplotlib.pyplot as plt
-from math import pow, e, log
-from distribution import frequency_distribution, powerlaw_series
+from math import pow, e, log, sqrt
+from distribution import frequency_distribution, powerlaw_series, random_series
 import sys
+import random
 
 def least_square_regression(x, y, xlabel = "x", ylabel = "y", prefix="", suffix=""):
     """
@@ -72,8 +73,6 @@ def estimate_scaling_parameter(series, xmin = 1, discrete = False):
     Alpha = 1.0 + count*(1/partial_sum) 
     return Alpha
 
-# def ks_statistics(series):
-
 def estimate_parameters(series, min_size_series = 50):
     """
     
@@ -82,6 +81,7 @@ def estimate_parameters(series, min_size_series = 50):
     **Parameters**
 
         series : series of data to be fit.
+        
         min_size_series : Minimum possible size of the distribution to which power-law fit will be attempted. Fitting power-law to a very small series would give biased results where power-law may appear to be a good fit even when data is not drawn from power-law distribution. The default value is taken to be 50 as suggested in the paper.
 
     **Returns**
@@ -102,7 +102,7 @@ def estimate_parameters(series, min_size_series = 50):
     ks_statistics_min = sys.maxint;
     xmin_result = 0
     Alpha_result = 2
-    for xmin in xmin_candidates[:-1*min_size_series]:
+    for xmin in xmin_candidates[:-1*(min_size_series-1)]: 
         data =  filter(lambda x: x>=xmin, sorted_series)
         estimated_Alpha = estimate_scaling_parameter(data, xmin)
         n = len(data)
@@ -116,8 +116,60 @@ def estimate_parameters(series, min_size_series = 50):
 
     return (xmin_result, Alpha_result)
 
+def generate_dataset(series, xmin, alpha, epsilon = 0.01):
+
+    """
+    
+    Generator to generate datasets for goodness_of_fit test.
+
+    **Parameters**
+
+        series : series of data on which the power-law model was fitted.
+
+        xmin : xmin for the fitted power-law model.
+
+        alpha : alpha for the fitted power-law model.
+
+        epsilon : desired accuracy in p-value. Default is set to 0.01
+
+    **Returns**
+
+        A generator to generate list of numbers (datasets).
+
+    """
+    number_of_datasets = int(round(0.25/(epsilon**2)) +1)
+    print number_of_datasets
+    n = len(series)
+    non_powerlaw_series = filter(lambda x: x<xmin, series)
+    ntail = n - len(non_powerlaw_series)
+    p = float(ntail)/n
+    # print p
+    # print ntail
+    # print n
+
+    for i in range(0, number_of_datasets):
+        dataset = []
+        count_powerlaw_series = 0
+        # how many numbers are to be picked from powerlaw distribution
+        for random_number in random_series(n):
+            if(random_number<=p):
+                count_powerlaw_series+=1
+                # generate number from power-law distribution
+            else:
+                # pick number from non_powerlaw_series
+              dataset.append(random.choice(non_powerlaw_series))
+        
+        dataset = dataset + [i for i in powerlaw_series(Alpha = alpha, xmin = xmin, n = count_powerlaw_series)]
+
+        yield dataset
+
+
 if __name__ == "__main__":
-    n = 1000
+    n = 100
     data = [i for i in powerlaw_series(n=n, xmin = 20, Alpha = 2.6)]
     # print data
-    print estimate_parameters(data)
+    (xmin, alpha) = estimate_parameters(data, min_size_series = 100)
+    # print "xmin = "+str(xmin)
+    # print "alpha = "+str(alpha)
+    for i in generate_dataset(series=data, xmin=xmin, alpha=alpha, epsilon = 0.1):
+        print i
