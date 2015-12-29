@@ -20,7 +20,7 @@ def random_series(n = 1):
         while True:
             yield random()
 
-def exponential_series(Lambda = 1.0, n = 1, xmin = 1.0):
+def exponential_series(Lambda = 1.0, n = 1, xmin = 1.0, discrete = False):
     """
 
     Generator to generate a stream of numbers taken from exponential distribution.
@@ -36,16 +36,25 @@ def exponential_series(Lambda = 1.0, n = 1, xmin = 1.0):
 
         xmin : Float/Integer, xmin for the distribution.
             Default value is 1.0
+        
+        discrete : Boolean, Whether the distribution is to be discrete or not (continous).
+            Default value is False
 
     """
     
     def mapping(x):
         return xmin - (1.0/Lambda) * log(1-x)
 
-    for x in random_series(n):
-        yield mapping(x)
+    if discrete:
+        xmin = xmin - 0.5
+        for x in random_series(n):
+            yield int(round(mapping(x)))
 
-def stretched_exponential_series(Lambda = 1.0, Beta = 1.0, n = 1, xmin = 1.0):
+    else:
+        for x in random_series(n):
+            yield mapping(x)
+
+def stretched_exponential_series(Lambda = 1.0, Beta = 1.0, n = 1, xmin = 1.0, discrete = False):
     """
 
     Generator to generate a stream of numbers taken from stretched exponential distribution.
@@ -65,15 +74,23 @@ def stretched_exponential_series(Lambda = 1.0, Beta = 1.0, n = 1, xmin = 1.0):
         xmin : Float/Integer, xmin for the distribution.
             Default value is 1.0
 
+        discrete : Boolean, Whether the distribution is to be discrete or not (continous).
+            Default value is False
+
     """
     
     def mapping(x):
         return pow( pow(xmin, Beta)-(1.0/Lambda)*log(1.0-x), 1.0/Beta )
 
-    for x in random_series(n):
-        yield mapping(x)
+    if discrete:
+        xmin = xmin - 0.5
+        for x in random_series(n):
+            yield int(round(mapping(x)))
+    else:
+        for x in random_series(n):
+            yield mapping(x)
 
-def powerlaw_series(Alpha = 2.0, n = 1, xmin = 1.0):
+def powerlaw_series(Alpha = 2.0, n = 1, xmin = 1.0, discrete = False):
     """
     
     Generator to generate a stream of numbers taken from powerlaw distribution.
@@ -91,14 +108,21 @@ def powerlaw_series(Alpha = 2.0, n = 1, xmin = 1.0):
         xmin : Float/Integer, xmin for the distribution.
             Default value is 1.0
 
+        discrete : Boolean, Whether the distribution is to be discrete or not (continous).
+            Default value is False
+
     """
     
     def mapping(x):
         return xmin * pow( (1.0-x), -1.0/(Alpha - 1.0) )
 
-    for x in random_series(n):
-        # yield int(mapping(x))
-        yield mapping(x)
+    if discrete:
+        xmin = xmin - 0.5
+        for x in random_series(n):
+            yield int(round(mapping(x)))
+    else:
+        for x in random_series(n):
+            yield mapping(x)
 
 def frequency_distribution(series, pdf = True, ccdf = True):
     """
