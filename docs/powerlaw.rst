@@ -20,6 +20,14 @@ powerlaw.regression module
     :undoc-members:
     :show-inheritance:
 
+powerlaw.utils module
+--------------------------
+
+.. automodule:: powerlaw.utils
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 
 Module contents
 ---------------
