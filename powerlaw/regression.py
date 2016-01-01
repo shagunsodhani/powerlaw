@@ -1,10 +1,15 @@
 import numpy as np
 from sklearn import linear_model
 import matplotlib.pyplot as plt
-from math import pow, e, log, sqrt
+from scipy.special import zeta
+
 from distribution import frequency_distribution, powerlaw_series, random_series
+from utils import unique
+
+from math import pow, e, log, sqrt
 import sys
 import random
+
 
 def least_square_regression(x, y, xlabel = "x", ylabel = "y", prefix="", suffix=""):
     """
@@ -53,7 +58,7 @@ def estimate_scaling_parameter(series, xmin = 1, discrete = False):
     
         series : series of data to be fit.
         xmin : Float/Integer, xmin for the distribution - assumed to be known before-hand. Default value is 1.0
-        discrete : Boolean, whether to treat series as discrete or continous. Default value is False
+        discrete : Boolean, whether to treat series as discrete or continous. Default value is False.
 
     **Returns**
 
@@ -73,7 +78,7 @@ def estimate_scaling_parameter(series, xmin = 1, discrete = False):
     Alpha = 1.0 + count*(1/partial_sum) 
     return Alpha
 
-def estimate_parameters(series, min_size_series = 50):
+def estimate_parameters(series, min_size_series = 50, discrete = False):
     """
     
     Apply Clauset et al.'s method to find the best fit value of xmin and Alpha.
@@ -84,9 +89,11 @@ def estimate_parameters(series, min_size_series = 50):
         
         min_size_series : Minimum possible size of the distribution to which power-law fit will be attempted. Fitting power-law to a very small series would give biased results where power-law may appear to be a good fit even when data is not drawn from power-law distribution. The default value is taken to be 50 as suggested in the paper.
 
+        discrete : Boolean, whether to treat series as discrete or continous. Default value is False
+
     **Returns**
 
-        Tuple of (Estimated xmin, Estimated Alpha value).
+        Tuple of (Estimated xmin, Estimated Alpha value, minimum KS statistics score).
 
     """
 
@@ -105,16 +112,19 @@ def estimate_parameters(series, min_size_series = 50):
     for xmin in xmin_candidates[:-1*(min_size_series-1)]: 
         data =  filter(lambda x: x>=xmin, sorted_series)
         estimated_Alpha = estimate_scaling_parameter(data, xmin)
-        n = len(data)
-        Sx = [i[1] for i in frequency_distribution(data, pdf=False)]
-        Px = [i[1] for i in frequency_distribution(powerlaw_series(Alpha = estimated_Alpha, n = n, xmin = xmin), pdf = False)]
+        if(discrete):
+            Px = [zeta(estimated_Alpha, x)/zeta(estimated_Alpha, xmin) for x in unique(data)]
+        else:
+            Px = [pow(float(x)/xmin, 1 - estimated_Alpha ) for x in unique(data)]
+        n = len(Px)
+        Sx = [i[1]/n for i in frequency_distribution(data, pdf=False)]
         ks_statistics = max( map (lambda counter: abs(Sx[counter] - Px[counter]) , range(0, n) ) )
         if(ks_statistics<ks_statistics_min):
             ks_statistics_min = ks_statistics
             xmin_result = xmin
             Alpha_result = estimated_Alpha
 
-    return (xmin_result, Alpha_result)
+    return (xmin_result, Alpha_result, ks_statistics_min)
 
 def generate_dataset(series, xmin, alpha, epsilon = 0.01):
 
@@ -163,13 +173,50 @@ def generate_dataset(series, xmin, alpha, epsilon = 0.01):
 
         yield dataset
 
+def goodness_of_fit(series, xmin, alpha, ks_statistics, epsilon = 0.01, min_size_series = 50):
+
+    """
+    
+    Function to calculate the p-value as a measure of goodness_of_fit for the fitted model.
+
+    **Parameters**
+
+        series : series of data on which the power-law model was fitted.
+
+        xmin : xmin for the fitted power-law model.
+
+        alpha : alpha for the fitted power-law model.
+
+        ks_statistics : KS statistics for the fitted power-law model.
+
+        epsilon : desired accuracy in p-value. Default is set to 0.01.
+
+        min_size_series : Minimum possible size of the distribution to which power-law fit will be attempted. This value is used when fitting power-law to the generated datasets. The default value is taken to be 50. For further details, see `estimate_parameters()`.
+
+    **Returns**
+
+        p-value for the fitted model.
+
+    """
+
+    count_dataset = 0.0
+    # number of synthetic datasets tested
+    n1 = 0.0
+    # number of synthetic datasets where ks value is greater than ks value for given data 
+    for dataset in generate_dataset(series=series, xmin=xmin, alpha=alpha, epsilon=epsilon):
+        count_dataset+=1.0
+        (xmin_dataset, alpha_dataset, ks_statistics_dataset) = estimate_parameters(series=dataset, min_size_series = min_size_series)
+        if(ks_statistics_dataset>ks_statistics):
+            n1+=1.0
+    return n1/count_dataset
+
 
 if __name__ == "__main__":
-    n = 100
+    n = 10
     data = [i for i in powerlaw_series(n=n, xmin = 20, Alpha = 2.6)]
     # print data
-    (xmin, alpha) = estimate_parameters(data, min_size_series = 100)
-    # print "xmin = "+str(xmin)
-    # print "alpha = "+str(alpha)
-    for i in generate_dataset(series=data, xmin=xmin, alpha=alpha, epsilon = 0.1):
-        print i
+    (xmin, alpha, ks_statistics) = estimate_parameters(series=data, min_size_series = 5)
+    print "xmin = "+str(xmin)
+    print "alpha = "+str(alpha)
+
+    print goodness_of_fit(series=data, xmin=xmin, alpha=alpha, ks_statistics=ks_statistics, epsilon = 0.01, min_size_series = 50)
