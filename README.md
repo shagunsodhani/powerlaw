@@ -2,7 +2,7 @@
 
 [![Documentation Status](https://readthedocs.org/projects/powerlaw/badge/?version=latest)](http://powerlaw.readthedocs.org/en/latest/?badge=latest)
 
-Power-Law Distribution Analysis based on [Power-law distributions in Empirical data](http://arxiv.org/pdf/0706.1062.pdf) paper.
+Power-Law Distribution Analysis based on [Power-law distributions in Empirical data](http://arxiv.org/pdf/0706.1062.pdf) paper ([Summary](/paper/README.md)).
 
 ## Basic use
 
@@ -37,6 +37,7 @@ sudo python setup.py install
 
 The current implementation supports fitting both continous and discrete data to a powerlaw (using both Linear Regression and Maximum Liklihood Estimator method) and calculating the goodness of fit for the fitted powerlaw. Additionally, there are methods to generate random numbers for powerlaw, exponential and strectched exponenetial series. The complete documentation can be fount [here](https://powerlaw.readthedocs.org).
 
+A short summary of the paper can be found [here](/paper/README.md).
 
 ## References
 
