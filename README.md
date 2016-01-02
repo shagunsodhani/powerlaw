@@ -35,7 +35,7 @@ sudo python setup.py install
 
 ## Features
 
-The current implementation supports fitting both continous and discrete data to a powerlaw (using both Linear Regression and Maximum Liklihood Estimator method) and calculating the goodness of fit for the fitted powerlaw. Additionally, there are methods to generate random numbers for powerlaw, exponential and strectched exponenetial series. The complete documentation can be fount [here](https://powerlaw.readthedocs.org).
+The current implementation supports fitting both continuous and discrete data to a power-law (using both Linear Regression and Maximum Likelihood Estimator method) and calculating the goodness of fit for the fitted power-law. Additionally, there are methods to generate random numbers for power-law, exponential and stretched exponential series. The complete documentation can be found [here](https://powerlaw.readthedocs.org).
 
 A short summary of the paper can be found [here](/paper/README.md).
 

@@ -12,7 +12,7 @@ Power-law distribution makes a straight line on  the log-log plot. This slope ca
 
 ### Estimating scaling parameter
 
-Assuming that we know the value of *x<sub>min</sub>*, the value of *&alpha;* can be obtained by the *method of maximum liklihood*. Maximum liklihood estimator (MLE) for continuous case is given as:
+Assuming that we know the value of *x<sub>min</sub>*, the value of *&alpha;* can be obtained by the *method of maximum likelihood*. Maximum likelihood estimator (MLE) for continuous case is given as:
 
 ![equation](assets/MLEContinous.png)
 
