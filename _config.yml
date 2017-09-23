@@ -1,0 +1,8 @@
+title: Powerlaw
+description: Power-Law Distribution Analysis
+google_analytics: UA-68140113-1
+show_downloads: true
+theme: jekyll-theme-minimal
+
+gems:
+  - jekyll-mentions
