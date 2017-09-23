@@ -1,5 +1,7 @@
 # powerlaw
 
+[![DOI](https://zenodo.org/badge/48375467.svg)](https://zenodo.org/badge/latestdoi/48375467)
+
 Power-Law Distribution Analysis based on [Power-law distributions in Empirical data](http://arxiv.org/pdf/0706.1062.pdf) paper. ([Summary](/paper/README.md))
 
 ## Basic use
