@@ -13,11 +13,11 @@ Power-Law Distribution Analysis based on [Power-law distributions in Empirical d
 ```
 from powerlaw.regression import estimate_parameters, goodness_of_fit
 
-data = [1.1, 2.2, ...]
+data = [1.1, 2.2, 3.3, 4.4]
 
 (xmin, alpha, ks_statistics) = estimate_parameters(data)
 
-p_value = goodness_of_fit(series, xmin, alpha, ks_statistics)
+p_value = goodness_of_fit(data, xmin, alpha, ks_statistics)
 ```
 
 ## Install
