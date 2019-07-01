@@ -3,8 +3,8 @@ from sklearn import linear_model
 import matplotlib.pyplot as plt
 from scipy.special import zeta
 
-from distribution import frequency_distribution, powerlaw_series, random_series
-from utils import unique
+from .distribution import frequency_distribution, powerlaw_series, random_series
+from .utils import unique
 
 from math import pow, e, log, sqrt
 import sys
@@ -28,9 +28,9 @@ def least_square_regression(x, y, xlabel = "x", ylabel = "y", prefix="", suffix=
     regr.fit(X, Y)
 
     label_string = "Best fit line, y = "+str(regr.coef_[0][0])+" * x + "+str(regr.intercept_[0])
-    print label_string
-    print "Residual sum of squares: %.2f" % np.mean((regr.predict(X) - Y) ** 2)
-    print "Variance score: %.2f" % regr.score(X, Y)
+    print(label_string)
+    print("Residual sum of squares: %.2f" % np.mean((regr.predict(X) - Y) ** 2))
+    print("Variance score: %.2f" % regr.score(X, Y))
 
     # Plot outputs
     original_data, = plt.plot(X, Y,'go', label="original data")
@@ -106,11 +106,11 @@ def estimate_parameters(series, min_size_series = 50, discrete = False):
             x_prev = x
             xmin_candidates.append(x_prev)
 
-    ks_statistics_min = sys.maxint;
+    ks_statistics_min = sys.maxsize;
     xmin_result = 0
     Alpha_result = 2
     for xmin in xmin_candidates[:-1*(min_size_series-1)]: 
-        data =  filter(lambda x: x>=xmin, sorted_series)
+        data =  [x for x in sorted_series if x>=xmin]
         estimated_Alpha = estimate_scaling_parameter(data, xmin)
         if(discrete):
             Px = [zeta(estimated_Alpha, x)/zeta(estimated_Alpha, xmin) for x in unique(data)]
@@ -118,7 +118,7 @@ def estimate_parameters(series, min_size_series = 50, discrete = False):
             Px = [pow(float(x)/xmin, 1 - estimated_Alpha ) for x in unique(data)]
         n = len(Px)
         Sx = [i[1]/n for i in frequency_distribution(data, pdf=False)]
-        ks_statistics = max( map (lambda counter: abs(Sx[counter] - Px[counter]) , range(0, n) ) )
+        ks_statistics = max( [abs(Sx[counter] - Px[counter]) for counter in range(0, n)] )
         if(ks_statistics<ks_statistics_min):
             ks_statistics_min = ks_statistics
             xmin_result = xmin
@@ -148,9 +148,9 @@ def generate_dataset(series, xmin, alpha, epsilon = 0.01):
 
     """
     number_of_datasets = int(round(0.25/(epsilon**2)) +1)
-    print number_of_datasets
+    print(number_of_datasets)
     n = len(series)
-    non_powerlaw_series = filter(lambda x: x<xmin, series)
+    non_powerlaw_series = [x for x in series if x<xmin]
     ntail = n - len(non_powerlaw_series)
     p = float(ntail)/n
     # print p
@@ -216,7 +216,7 @@ if __name__ == "__main__":
     data = [i for i in powerlaw_series(n=n, xmin = 20, Alpha = 2.6)]
     # print data
     (xmin, alpha, ks_statistics) = estimate_parameters(series=data, min_size_series = 5)
-    print "xmin = "+str(xmin)
-    print "alpha = "+str(alpha)
+    print("xmin = "+str(xmin))
+    print("alpha = "+str(alpha))
 
-    print goodness_of_fit(series=data, xmin=xmin, alpha=alpha, ks_statistics=ks_statistics, epsilon = 0.01, min_size_series = 50)
+    print(goodness_of_fit(series=data, xmin=xmin, alpha=alpha, ks_statistics=ks_statistics, epsilon = 0.01, min_size_series = 50))
